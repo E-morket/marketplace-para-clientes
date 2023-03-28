@@ -1,24 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import Home from './components/home/home.js';
+import UserRegistry from './components/user-registry/userRegistry.js'
+import ProductDetail from './components/product-detail/productDetail';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';  
+import { ProtectedRoute } from './components/protected-routes/protected-routes';
+import { useState } from 'react';
 
-function App() {
+
+const  App = ()  => {
+  const [isAllowed, setIsAllowed] = useState(false)
+  
+  const getUserAllowed = (value) => {
+    if(value === '') {
+      setIsAllowed(false)
+    } else {
+      setIsAllowed(true)
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>  
+     <BrowserRouter>
+        <Routes>
+          <Route element={<ProtectedRoute isAllowed={isAllowed}/>}>
+              <Route path='/administracion' element={<Home />}></Route>
+          </Route>
+          <Route path='/login' element={<UserRegistry  sendDataUser={getUserAllowed}/>}></Route>
+          <Route path='/' element={<ProductDetail />}></Route>
+        </Routes>
+     </BrowserRouter>
+    </>
   );
 }
 
